@@ -17,6 +17,7 @@ import com.hospital.repositories.ConsultationRepository;
 import com.hospital.repositories.MedecinRepository;
 import com.hospital.repositories.PatientRepository;
 import com.hospital.repositories.RendezVousRepository;
+import com.hospital.services.IHospitalService;
 
 
 
@@ -29,10 +30,11 @@ public class HospitalManagementSystemApplication{
 	
 	@Bean
 	CommandLineRunner start(
+			IHospitalService hospitalService,
 			PatientRepository patientRepository,
 			MedecinRepository medecinRepository,
-			RendezVousRepository rendezVousRepository,
-			ConsultationRepository consultationRepository) {
+			RendezVousRepository rendezVousRepository
+			) {
 		
 		return args -> {
 			
@@ -41,7 +43,7 @@ public class HospitalManagementSystemApplication{
 				patient.setNom(name);
 				patient.setDateNaissance(new Date());
 				patient.setMalade(Math.random()<0.5 ?true : false);
-				patientRepository.save(patient);
+				hospitalService.savePatient(patient);
 			});
 			
 			Stream.of("jack", "Michael", "Paul", "Katy").forEach(name ->{
@@ -49,7 +51,7 @@ public class HospitalManagementSystemApplication{
 				medecin.setNom(name);
 				medecin.setEmail(name+"@gmail.com");
 				medecin.setSpecialite(Math.random()<0.5 ?"Generaliste" : "Specialiste");
-				medecinRepository.save(medecin);
+				hospitalService.saveMedecin(medecin);
 			});
 			
 			//Ici, je vais créer un rdv pour chaque patient avec un medcin avec le meme id
@@ -59,7 +61,7 @@ public class HospitalManagementSystemApplication{
 				rendezVous.setMedecin(medecinRepository.findById(patient.getId()).get());
 				rendezVous.setDate(new Date());
 				rendezVous.setStatus(StatusRDV.PENDING);
-				rendezVousRepository.save(rendezVous);
+				hospitalService.saveRendezVous(rendezVous);
 			});
 			
 			//Ici, je vais créer une Consultation pour chaque Rdv
@@ -68,7 +70,7 @@ public class HospitalManagementSystemApplication{
 				consultation.setDateConsultation(new Date());
 				consultation.setRapport("rapport de la consultaion ...");
 				consultation.setRendezVous(rdv);
-				consultationRepository.save(consultation);
+				hospitalService.saveConsultation(consultation);
 			});
 			
 			
