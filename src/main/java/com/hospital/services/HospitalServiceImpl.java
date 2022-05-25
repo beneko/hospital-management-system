@@ -1,5 +1,7 @@
 package com.hospital.services;
 
+import java.util.UUID;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -45,7 +47,7 @@ public class HospitalServiceImpl implements IHospitalService{
 
 	@Override
 	public RendezVous saveRendezVous(RendezVous rendezVous) {
-		
+		rendezVous.setId(UUID.randomUUID().toString());
 		return rendezVousRepository.save(rendezVous);
 	}
 
