@@ -1,27 +1,23 @@
 package com.hospital;
 
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Stream;
-
-import javax.persistence.OneToMany;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.annotation.CreatedBy;
 
+import com.hospital.entities.Consultation;
 import com.hospital.entities.Medecin;
 import com.hospital.entities.Patient;
 import com.hospital.entities.RendezVous;
 import com.hospital.entities.StatusRDV;
+import com.hospital.repositories.ConsultationRepository;
 import com.hospital.repositories.MedecinRepository;
 import com.hospital.repositories.PatientRepository;
 import com.hospital.repositories.RendezVousRepository;
 
-import antlr.CharQueue;
-import lombok.val;
 
 
 @SpringBootApplication
@@ -32,7 +28,11 @@ public class HospitalManagementSystemApplication{
 	}
 	
 	@Bean
-	CommandLineRunner start(PatientRepository patientRepository, MedecinRepository medecinRepository, RendezVousRepository rendezVousRepository) {
+	CommandLineRunner start(
+			PatientRepository patientRepository,
+			MedecinRepository medecinRepository,
+			RendezVousRepository rendezVousRepository,
+			ConsultationRepository consultationRepository) {
 		
 		return args -> {
 			
@@ -60,6 +60,15 @@ public class HospitalManagementSystemApplication{
 				rendezVous.setDate(new Date());
 				rendezVous.setStatus(StatusRDV.PENDING);
 				rendezVousRepository.save(rendezVous);
+			});
+			
+			//Ici, je vais créer une Consultation pour chaque Rdv
+			rendezVousRepository.findAll().forEach(rdv ->{
+				Consultation consultation= new Consultation();
+				consultation.setDateConsultation(new Date());
+				consultation.setRapport("rapport de la consultaion ...");
+				consultation.setRendezVous(rdv);
+				consultationRepository.save(consultation);
 			});
 			
 			
