@@ -3,6 +3,8 @@ package com.hospital.entities;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +21,7 @@ public class RendezVous {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Date date;
+	@Enumerated(EnumType.STRING)
 	private StatusRDV Status;
 	@ManyToOne
 	private Patient patient;
