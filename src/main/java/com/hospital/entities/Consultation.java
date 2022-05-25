@@ -20,5 +20,5 @@ public class Consultation {
 	private Date dateConsultation;
 	private String rapport;
 	@OneToOne
-	private RendezVous rendezVouse;
+	private RendezVous rendezVous;
 }
